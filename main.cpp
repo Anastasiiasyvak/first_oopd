@@ -5,9 +5,6 @@
 
 using namespace std;
 
-class Airplane{
-
-};
 
 class Ticket{
 private:
@@ -20,11 +17,15 @@ private:
     int ID;
 
 public:
-    Ticket(const string& UserName, const string& Date, const string& FlightName, const string Place, const int& Price)
+    Ticket(const string& UserName, const string& Date, const string& FlightName, const string& Place, const int& Price)
         : UserName(UserName), Date(Date), FlightName(FlightName), Place(Place), Price(Price), IsBooked(false){}
 
     string GetUserName() const{
         return UserName;
+    }
+
+    bool GetIsBooked() const{
+        return IsBooked;
     }
 
     string GetDate() const{
@@ -56,14 +57,10 @@ public:
         IsBooked = true;
     }
 
-    bool Book() {
-        if (!IsBooked) {
-            IsBooked = true;
-            return true;
-        }
-        return false;
+    void DeleteBooking() {
+        UserName = "";
+        IsBooked = false;
     }
-
 };
 
 
@@ -86,6 +83,86 @@ public:
         tickets.push_back(ticket);
     }
 };
+
+
+class Airplane{
+private:
+    vector<Ticket> tickets;
+    string Date;
+    string flightName;
+    int TotalSize;
+
+public:
+    Airplane(const string& flightName, string& Date, int& TotalSize): flightName(flightName), Date(Date){}
+
+    void setTotalSize(const int& total) {
+        TotalSize = total;
+    }
+
+    void addTicket(const Ticket& newTicket) {
+        tickets.push_back(newTicket);
+    }
+
+    string getDate() const {
+        return Date;
+    }
+
+    string getFlightName() const {
+        return flightName;
+    }
+
+    vector<Ticket> getTickets() const {
+        return tickets;
+    }
+
+    vector<Ticket> SeatAvailability() const {
+        vector<Ticket> availableTickets;
+        for (const auto& ticket : tickets) {
+            if (ticket.GetIsBooked() == false && ticket.GetUserName() == "-") {
+                availableTickets.push_back(ticket);
+            }
+        }
+        return availableTickets;
+    }
+
+    void BookSeat(const string& UserName, const string& Place, int& ID, vector<Ticket>* IsBookedTickets, vector<User>* users) {
+        for (auto & ticket : tickets) {
+            if (ticket.GetPlace() == Place && ticket.GetIsBooked()) {
+                ticket.SetUserName(UserName);
+                ticket.SetID(ID);
+                IsBookedTickets->push_back(ticket);
+                bool UserFound = false;
+                for (auto & user : *users) {
+                    if (user.GetUserName() == UserName) {
+                        user.addTicket(ticket);
+                        UserFound = true;
+                        break;
+                    }
+                }
+                if (!UserFound) {
+                    User newUser(UserName);
+                    newUser.addTicket(ticket);
+                    users->push_back(move(newUser));
+                }
+                cout << "Confirmed with ID " << ID << endl;
+                return;
+            }
+        }
+        cout << "Seat not available or already booked." << endl;
+    }
+
+    void ReturnTicketByID(const int ticketId) {
+        for (auto& ticket : tickets) {
+            if (ticket.GetID() == ticketId) {
+                ticket.DeleteBooking();
+                return;
+            }
+        }
+    }
+};
+
+
+
 
 
 class ConfigReader{
