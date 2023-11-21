@@ -14,49 +14,79 @@ private:
     string UserName;
     string Date;
     string FlightName;
-    string place;
-    int price;
+    string Place;
+    int Price;
     bool IsBooked;
     int ID;
 
 public:
-    Ticket(const string& UserName, const string& Date, const string& FlightName, const string place, const int& price)
-        : UserName(UserName), Date(Date), FlightName(FlightName), place(place), price(price), IsBooked(false){}
+    Ticket(const string& UserName, const string& Date, const string& FlightName, const string Place, const int& Price)
+        : UserName(UserName), Date(Date), FlightName(FlightName), Place(Place), Price(Price), IsBooked(false){}
 
     string GetUserName() const{
-        return this->UserName;
+        return UserName;
     }
 
     string GetDate() const{
-        return this->Date;
+        return Date;
     }
 
     string GetFlightName() const{
-        return this->FlightName;
+        return FlightName;
     }
 
     string GetPlace() const{
-        return this->place;
+        return Place;
     }
 
     int GetPrice() const{
-        return this->price;
+        return Price;
     }
 
     int GetID() const{
-        return this->ID;
+        return ID;
     }
 
-    void SetID(int ID){
-        this->ID = ID;
+    void SetID(int newID){
+        ID = newID;
     }
 
-    void SetUserName(const string& UserName){
-        this->UserName = UserName;
-        this->IsBooked = true;
+    void SetUserName(const string& newUserName){
+        UserName = newUserName;
+        IsBooked = true;
+    }
+
+    bool Book() {
+        if (!IsBooked) {
+            IsBooked = true;
+            return true;
+        }
+        return false;
     }
 
 };
+
+
+class User{
+private:
+    string UserName;
+    vector<Ticket> tickets;
+public:
+    User(const string& UserName): UserName(UserName){}
+
+    string GetUserName() const{
+        return UserName;
+    }
+
+    vector<Ticket>& UserTickets(){
+        return tickets;
+    }
+
+    void addTicket(const Ticket& ticket){
+        tickets.push_back(ticket);
+    }
+};
+
 
 class ConfigReader{
 
@@ -67,6 +97,11 @@ class FileHandler{
 };
 
 class AirlineSystem{
+private:
+    vector<Ticket> Tickets;
+    vector<User> Users;
+public:
+
 
 };
 
@@ -102,3 +137,18 @@ int main() {
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
